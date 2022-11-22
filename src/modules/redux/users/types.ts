@@ -1,0 +1,5 @@
+export enum UserActionTypesEnum {
+    'GET_USERS_REQUEST'= 'GET_USERS_REQUEST',
+    'GET_USERS_RESPONSE'= 'GET_USERS_RESPONSE',
+    'GET_USERS_ERROR'= 'GET_USERS_ERROR'
+}
