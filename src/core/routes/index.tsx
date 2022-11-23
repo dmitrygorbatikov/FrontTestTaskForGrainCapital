@@ -8,7 +8,7 @@ const useRoutes = () => {
         <Routes>
             <Route path="/" element={<HomePage />}/>
             <Route path="/users" element={<UsersPage />}/>
-            <Route path="/users/:id" element={<DetailUsersPage />}/>
+            <Route path="/users/:userId" element={<DetailUsersPage />}/>
             <Route path="*" element={<Navigate to={'/'} replace/>}/>
         </Routes>
     )

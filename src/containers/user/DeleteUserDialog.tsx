@@ -1,12 +1,13 @@
 import {FC} from "react";
 import {Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from "@mui/material";
 import {IUser} from "../../modules/redux/users/types";
+import {IUserItem} from "../../modules/redux/detail-user/types";
 
 interface IDeleteUserDialogProps {
     open: boolean
     handleClose: () => void
-    action: () => void
-    user: IUser | undefined
+    action: (id: string) => void
+    user: IUser | IUserItem | undefined
 }
 const DeleteUserDialog: FC<IDeleteUserDialogProps> = (props) => {
     const {action, open, handleClose, user} = props
@@ -23,7 +24,7 @@ const DeleteUserDialog: FC<IDeleteUserDialogProps> = (props) => {
             </DialogTitle>
             <DialogActions>
                 <Button onClick={handleClose}>Cancel</Button>
-                <Button color={'error'} onClick={action} autoFocus>
+                <Button color={'error'} onClick={() => action(user?.id ?? '')} autoFocus>
                     Delete
                 </Button>
             </DialogActions>

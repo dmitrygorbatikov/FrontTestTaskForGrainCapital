@@ -1,10 +1,10 @@
-import {IUser, UserActionTypesEnum} from "./types";
-
+import {IUser, UsersActionTypesEnum} from "./types";
 
 interface IUsersReducer {
-    users: IUser[],
-    usersForSearch: IUser[],
-    loading: boolean,
+    users: IUser[]
+    user?: IUser
+    usersForSearch: IUser[]
+    loading: boolean
     error: any
 }
 
@@ -22,35 +22,35 @@ const defaultState: IUsersReducer = {
 
 const usersReducer = (state = defaultState, action: IUserAction): IUsersReducer => {
     switch (action.type) {
-        case UserActionTypesEnum.GET_USERS_REQUEST:
+        case UsersActionTypesEnum.GET_USERS_REQUEST:
             return {
                 loading: true,
                 error: null,
                 users: [],
                 usersForSearch: []
             }
-        case UserActionTypesEnum.GET_USERS_RESPONSE:
+        case UsersActionTypesEnum.GET_USERS_RESPONSE:
             return {
                 loading: false,
                 users: action.payload,
                 usersForSearch: action.payload,
                 error: null
             }
-        case UserActionTypesEnum.GET_USERS_ERROR:
+        case UsersActionTypesEnum.GET_USERS_ERROR:
             return {
                 loading: false,
                 error: action.payload,
                 users: [],
                 usersForSearch: []
             }
-        case UserActionTypesEnum.SEARCH_USERS:
+        case UsersActionTypesEnum.SEARCH_USERS:
             return {
                 loading: false,
                 usersForSearch: state.usersForSearch,
                 users: action.payload,
                 error: null
             }
-        case UserActionTypesEnum.CREATE_USER:
+        case UsersActionTypesEnum.CREATE_USER:
             return {
                 loading: false,
                 usersForSearch: state.usersForSearch,

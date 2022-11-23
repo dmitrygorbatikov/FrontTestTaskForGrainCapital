@@ -56,7 +56,7 @@ const CreateUserDialog: FC<ICreateUserDialogProps> = (props) => {
                                     setName(e.target.value)
                                 }}
                             />
-                            {nameError && <Typography sx={{marginBottom: 2}} color={'red'}>Field must not be empty</Typography>}
+                            {nameError && <Typography sx={{marginBottom: 2}} color={'red'}>Fields must not be empty</Typography>}
                         </div>
                         <div>
                             <TextField
@@ -72,7 +72,7 @@ const CreateUserDialog: FC<ICreateUserDialogProps> = (props) => {
                                     setUsername(e.target.value)
                                 }}
                             />
-                            {usernameError && <Typography sx={{marginBottom: 2}} color={'red'}>Field must not be empty</Typography>}
+                            {usernameError && <Typography sx={{marginBottom: 2}} color={'red'}>Fields must not be empty</Typography>}
 
                         </div>
                     </Box>

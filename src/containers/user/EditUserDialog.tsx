@@ -11,12 +11,13 @@ import {
     TextField,
     Typography
 } from "@mui/material";
+import {IUserItem} from "../../modules/redux/detail-user/types";
 
 interface IEditUserDialogProps {
     open: boolean
     handleClose: () => void
-    action: () => void
-    user: IUser | undefined
+    action: (props: {name: string, username: string, id: string}) => void
+    user: IUser | IUserItem | undefined
 }
 
 const EditUserDialog: FC<IEditUserDialogProps> = (props) => {
@@ -36,7 +37,7 @@ const EditUserDialog: FC<IEditUserDialogProps> = (props) => {
             setUsernameError(true)
         }
         if(name && username) {
-            action()
+            action({id: user?.id ?? '',name,username})
             handleClose()
         }
     }
@@ -71,7 +72,7 @@ const EditUserDialog: FC<IEditUserDialogProps> = (props) => {
                                 setName(e.target.value)
                             }}
                         />
-                        {nameError && <Typography sx={{marginBottom: 2}} color={'red'}>Field must not be empty</Typography>}
+                        {nameError && <Typography sx={{marginBottom: 2}} color={'red'}>Fields must not be empty</Typography>}
                     </div>
                     <div>
                         <TextField
@@ -87,7 +88,7 @@ const EditUserDialog: FC<IEditUserDialogProps> = (props) => {
                                 setUsername(e.target.value)
                             }}
                         />
-                        {usernameError && <Typography sx={{marginBottom: 2}} color={'red'}>Field must not be empty</Typography>}
+                        {usernameError && <Typography sx={{marginBottom: 2}} color={'red'}>Fields must not be empty</Typography>}
 
                     </div>
                 </Box>
