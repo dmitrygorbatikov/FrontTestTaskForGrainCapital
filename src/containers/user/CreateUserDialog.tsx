@@ -1,5 +1,6 @@
 import {FC, useState} from "react";
-import {Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Typography} from "@mui/material";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import UserDialogContent from "./UserDialogContent";
 
 interface ICreateUserDialogProps {
     open: boolean
@@ -20,6 +21,7 @@ const CreateUserDialog: FC<ICreateUserDialogProps> = (props) => {
         setUsername('')
         handleClose()
     }
+
     const createUser = () => {
         if(name === '') {
             setNameError(true)
@@ -32,6 +34,7 @@ const CreateUserDialog: FC<ICreateUserDialogProps> = (props) => {
             onClose()
         }
     }
+
     return (
         <Dialog
             open={open}
@@ -41,41 +44,16 @@ const CreateUserDialog: FC<ICreateUserDialogProps> = (props) => {
                 Create new user
             </DialogTitle>
             <DialogContent>
-                    <Box sx={{padding: 2}}>
-                        <div>
-                            <TextField
-                                sx={{marginBottom: nameError ? 0 : 2}}
-                                error={nameError}
-                                id="outlined-basic"
-                                label="Name"
-                                variant="outlined"
-                                value={name}
-                                onChange={(e) => {
-                                    setNameError(false)
-                                    setUsernameError(false)
-                                    setName(e.target.value)
-                                }}
-                            />
-                            {nameError && <Typography sx={{marginBottom: 2}} color={'red'}>Fields must not be empty</Typography>}
-                        </div>
-                        <div>
-                            <TextField
-                                sx={{marginBottom: usernameError ? 0 : 2}}
-                                error={usernameError}
-                                id="outlined-basic"
-                                label="Surname"
-                                variant="outlined"
-                                value={username}
-                                onChange={(e) => {
-                                    setNameError(false)
-                                    setUsernameError(false)
-                                    setUsername(e.target.value)
-                                }}
-                            />
-                            {usernameError && <Typography sx={{marginBottom: 2}} color={'red'}>Fields must not be empty</Typography>}
-
-                        </div>
-                    </Box>
+                <UserDialogContent
+                    usernameError={usernameError}
+                    nameError={nameError}
+                    setUsernameError={setUsernameError}
+                    setNameError={setNameError}
+                    setName={setName}
+                    name={name}
+                    setUsername={setUsername}
+                    username={username}
+                />
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleClose}>Cancel</Button>

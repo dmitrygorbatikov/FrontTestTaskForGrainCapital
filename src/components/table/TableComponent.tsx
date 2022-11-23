@@ -26,7 +26,6 @@ const TableComponent: FC<ITable> = (props) => {
     return (
         <>
             {loading ? <SkeletonTableComponent/> :
-
                 <TableContainer component={Paper}>
                     <Table sx={{minWidth: 650}} aria-label="simple table">
                         <TableHead>
@@ -39,7 +38,8 @@ const TableComponent: FC<ITable> = (props) => {
                                 <TableRow
                                     key={row.id}
                                     sx={{
-                                        '&:last-child td, &:last-child th': {border: 0}, '&:hover': {
+                                        '&:last-child td, &:last-child th': {border: 0},
+                                        '&:hover': {
                                             background: '#d4d4d4',
                                             transition: '.3s',
                                             cursor: 'pointer'
@@ -66,12 +66,19 @@ const TableComponent: FC<ITable> = (props) => {
                                                     key={`${row[key] + row.id}`}
                                                     onClick={() => onRowClick ? onRowClick(row.id) : null}
                                                 >
-                                                    {Boolean(row['edited']) ? <Typography color={'#0048ff'} variant={'overline'}>{row[key]}</Typography> : row[key]}
+                                                    {Boolean(row['edited'])
+                                                        ? (
+                                                            <Typography
+                                                                color={'#0048ff'}
+                                                                variant={'overline'}
+                                                            >
+                                                                {row[key]}
+                                                            </Typography>
+                                                        ) : row[key]}
                                                 </TableCell>
                                             )
                                         }
                                     })}
-
                                 </TableRow>
                             ))}
                         </TableBody>

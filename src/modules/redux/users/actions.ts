@@ -26,7 +26,6 @@ export const getUsers = () => {
 export const searchUsers = (props: {searchStr: string, users: IUser[]}) => {
     return (dispatch: Dispatch) => {
         const {searchStr, users} = props
-
         const filteredUsers = users.filter(item => {
             if (
                 item.id.toString().toLowerCase().includes(searchStr.toLowerCase())

@@ -4,9 +4,6 @@ export enum UsersActionTypesEnum {
     'GET_USERS_ERROR'= 'GET_USERS_ERROR',
     'SEARCH_USERS'= 'SEARCH_USERS',
     'CREATE_USER'= 'CREATE_USER',
-    'UPDATE_USER'= 'UPDATE_USER',
-    'DELETE_USER'= 'DELETE_USER',
-
 }
 
 export interface IUser {

@@ -1,5 +1,5 @@
 import {Dispatch} from "redux";
-import {IUserItem, UserActionTypesEnum} from "./types";
+import {UserActionTypesEnum} from "./types";
 import UserService from "../../../services/user.service";
 import {IUser} from "../users/types";
 
@@ -10,12 +10,20 @@ export const getUser = (props: {userId: string}) => {
             dispatch({type: UserActionTypesEnum.GET_USER_REQUEST})
             let user = await UserService.getOne({userId})
             const deletedIds = JSON.parse(localStorage.getItem('deletedIds') ?? '[]')
+
             if(!user || deletedIds.includes(Number(userId))) {
                 dispatch({type: UserActionTypesEnum.GET_USER_RESPONSE, payload: undefined})
             }
             else {
                 const {id, name, username} = user
-                dispatch({type: UserActionTypesEnum.GET_USER_RESPONSE, payload: {id, name, username}})
+
+                const editedFields: IUser[] = JSON.parse(localStorage.getItem('editedFields') ?? '[]')
+                const editedFieldsIndex = editedFields.findIndex(item => item.id.toString() === userId)
+                if(editedFieldsIndex !== -1) {
+                    dispatch({type: UserActionTypesEnum.GET_USER_RESPONSE, payload: editedFields[editedFieldsIndex]})
+                } else {
+                    dispatch({type: UserActionTypesEnum.GET_USER_RESPONSE, payload: {id, name, username}})
+                }
             }
         }
         catch (e) {
@@ -51,7 +59,7 @@ export const deleteUser = (props: {userId: number, users: IUser[]}) => {
 
 export const editUser = (props: {id: number, name: string, username: string, users: IUser[]}) => {
     return (dispatch: Dispatch) => {
-        const {name,id, users,username} = props
+        const {name,id, users, username} = props
         const editedFields = JSON.parse(localStorage.getItem('editedFields') ?? '[]')
         const user = {
             id: id.toString(),
@@ -60,10 +68,9 @@ export const editUser = (props: {id: number, name: string, username: string, use
             actions: true,
             edited: true
         }
+        const usersIndex = users.findIndex(item => item.id.toString() === id.toString())
         if(id > 0 && id <= 10) {
-            const usersIndex = users.findIndex(item => item.id.toString() === id.toString())
             if(usersIndex !== -1 && !(users[usersIndex].name === name && users[usersIndex].username === username)) {
-                users[usersIndex] = user
                 const editedFieldsIndex = editedFields.findIndex((item: IUser) => item.id.toString() === id.toString())
                 if(editedFieldsIndex === -1 ) {
                     const newArr = [user]
@@ -74,17 +81,20 @@ export const editUser = (props: {id: number, name: string, username: string, use
                     editedFields[editedFieldsIndex] = user
                     localStorage.setItem('editedFields', JSON.stringify(editedFields))
                 }
+                users[usersIndex] = user
             }
 
         } else {
             const additionalUsers: IUser[] = JSON.parse(localStorage.getItem('additionalUsers') ?? '[]')
 
             const additionalUsersIndex = additionalUsers.findIndex(item => item.id.toString() === id.toString())
-            if(additionalUsersIndex !== -1 && !(!(users[additionalUsersIndex].name === name && users[additionalUsersIndex].username === username))) {
+            if(additionalUsersIndex !== -1 && !(additionalUsers[additionalUsersIndex].name === name && additionalUsers[additionalUsersIndex].username === username)) {
                 additionalUsers[additionalUsersIndex] = user
+                localStorage.setItem('additionalUsers', JSON.stringify(additionalUsers))
+                users[usersIndex] = user
             }
-            localStorage.setItem('additionalUsers', JSON.stringify(additionalUsers))
         }
         dispatch({type: UserActionTypesEnum.GET_USER_RESPONSE, payload: users})
+        dispatch({type: UserActionTypesEnum.EDIT_USER, payload: user})
     }
 }

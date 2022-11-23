@@ -35,6 +35,12 @@ const usersReducer = (state = defaultState, action: IUserAction): IUsersReducer 
                 error: action.payload,
                 user: undefined
             }
+        case UserActionTypesEnum.EDIT_USER:
+            return {
+                loading: false,
+                user: action.payload,
+                error: null,
+            }
         default:
             return state
     }

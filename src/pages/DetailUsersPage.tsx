@@ -3,12 +3,15 @@ import {useDispatch, useSelector} from "react-redux";
 import {userLoadingSelector, userSelector} from "../modules/redux/detail-user/selectors";
 import {useNavigate, useParams} from "react-router-dom";
 import {deleteUser, editUser, getUser} from "../modules/redux/detail-user/actions";
-import {Box, Button, Typography} from "@mui/material";
+import {Box, Button, IconButton, Typography} from "@mui/material";
 import DeleteUserDialog from "../containers/user/DeleteUserDialog";
 import EditUserDialog from "../containers/user/EditUserDialog";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import SkeletonItemComponent from "../components/skeleton/SkeletonItemComponent";
 import {usersForSearchListSelector} from "../modules/redux/users/selectors";
+import {getUsers} from "../modules/redux/users/actions";
 
 const DetailUsersPage: FC = () => {
     const { userId } = useParams()
@@ -25,6 +28,20 @@ const DetailUsersPage: FC = () => {
         // @ts-ignore
         dispatch(deleteUser({users, userId: Number(id)}))
         navigate('/users')
+    }
+
+    const goPreviousPage = () => {
+        const currentIndex = users.findIndex(item => item.id === userId)
+        if(users[currentIndex-1]) {
+            navigate(`/users/${users[currentIndex-1].id}`)
+        }
+    }
+
+    const goNextPage = () => {
+        const currentIndex = users.findIndex(item => item.id === userId)
+        if(users[currentIndex+1]) {
+            navigate(`/users/${users[currentIndex+1].id}`)
+        }
     }
 
     const editUserAction = (props: {id: string, name: string, username: string}) => {
@@ -49,13 +66,19 @@ const DetailUsersPage: FC = () => {
         setOpenEditUser(true)
     }
 
-    const goHome = () => {
+    const goBack = () => {
         navigate('/users')
+    }
+
+    const goHome = () => {
+        navigate('/')
     }
 
     useEffect(() => {
         // @ts-ignore
         dispatch(getUser({userId: userId ?? ''}))
+        // @ts-ignore
+        dispatch(getUsers())
     },[userId])
 
     return (
@@ -66,24 +89,53 @@ const DetailUsersPage: FC = () => {
                 :
                 <Box>
                     <Box>
-                        <Button variant="outlined" startIcon={<ArrowBackIcon/>} onClick={goHome}>
+                        <Button variant="outlined" startIcon={<ArrowBackIcon/>} onClick={goBack}>
+                            Back
+                        </Button>
+                        <Button sx={{marginLeft: 2}} variant="outlined" onClick={goHome}>
                             Home
                         </Button>
                     </Box>
                     {!user ? <Typography>User not found</Typography> :
                         <>
-                            <Button onClick={handleShowEditDialog}>Edit</Button>
-                            <Button color={'error'} onClick={handleShowDeleteDialog}>Delete</Button>
-                            <DeleteUserDialog open={openDeleteUser} handleClose={handleCloseDeleteDialog}
-                            action={deleteUserAction} user={user}/>
-                            <EditUserDialog open={openEditUser} handleClose={handleCloseEditDialog} action={editUserAction}
-                            user={user}/>
-                            <Typography>name: {user?.name}</Typography>
-                            <Typography>username: {user?.username}</Typography>
+                            <Box>
+                                <Button onClick={handleShowEditDialog}>Edit</Button>
+                                <Button color={'error'} onClick={handleShowDeleteDialog}>Delete</Button>
+                            </Box>
+                            <Box>
+                                <Typography>name: {user?.name}</Typography>
+                                <Typography>username: {user?.username}</Typography>
+                            </Box>
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    justifyContent: 'space-between',
+                                    maxWidth: 200,
+                                    marginTop: 3
+                                }}>
+                                <IconButton onClick={goPreviousPage}>
+                                    <ArrowBackIosNewIcon/>
+                                </IconButton>
+                                <IconButton onClick={goNextPage}>
+                                    <ArrowForwardIosIcon/>
+                                </IconButton>
+                            </Box>
                         </>
-                            }
+                    }
                 </Box>
             }
+            <DeleteUserDialog
+                open={openDeleteUser}
+                handleClose={handleCloseDeleteDialog}
+                action={deleteUserAction}
+                user={user}
+            />
+            <EditUserDialog
+                open={openEditUser}
+                handleClose={handleCloseEditDialog}
+                action={editUserAction}
+                user={user}
+            />
         </>
     )
 }

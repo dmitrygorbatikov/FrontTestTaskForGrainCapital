@@ -1,16 +1,16 @@
 import {FC, useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {usersForSearchListSelector, usersListSelector, usersLoadingSelector} from "../modules/redux/users/selectors";
-import {createUser, getUsers, searchUsers} from "../modules/redux/users/actions";
+import {createUser, getUsers} from "../modules/redux/users/actions";
 import TableComponent from "../components/table/TableComponent";
 import {useNavigate} from "react-router-dom";
 import DeleteUserDialog from "../containers/user/DeleteUserDialog";
 import {IUser, UsersActionTypesEnum} from "../modules/redux/users/types";
 import EditUserDialog from "../containers/user/EditUserDialog";
-import { Button, IconButton, InputAdornment, OutlinedInput, Typography } from "@mui/material";
-import SearchIcon from '@mui/icons-material/Search';
+import {Box, Typography} from "@mui/material";
 import CreateUserDialog from "../containers/user/CreateUserDialog";
 import {deleteUser, editUser} from "../modules/redux/detail-user/actions";
+import UsersHeader from "../containers/user/UsersHeader";
 
 const UsersPage: FC = () => {
     const dispatch = useDispatch()
@@ -71,43 +71,26 @@ const UsersPage: FC = () => {
     const onRowClick = (id: string) => {
         navigate(`/users/${id}`)
     }
+
+    const goHome = () => {
+        navigate('/')
+    }
+
     useEffect(() => {
         // @ts-ignore
         dispatch(getUsers())
     },[])
 
-    console.log(users)
-
-    const columns = ['Id', 'Name', 'Username','Actions']
+    const columns = ['Id', 'Name', 'Username','Actions','']
     return (
-        <>
-            <Typography variant={'h4'}>Users Page</Typography>
-            <OutlinedInput
-                id="outlined-basic"
-                placeholder="Search.."
-                value={searchStr}
-                endAdornment={
-                    <InputAdornment position="end">
-                        <IconButton
-                            edge="end"
-                        >
-                            <SearchIcon/>
-                        </IconButton>
-                    </InputAdornment>
-                }
-                onChange={(e) => {
-                    setSearchStr(e.target.value)
-                    // @ts-ignore
-                    dispatch(searchUsers({searchStr: e.target.value, users: usersForSearch}))
-                }}
+        <Box>
+            <UsersHeader
+                setOpenCreateUser={setOpenCreateUser}
+                searchStr={searchStr}
+                setSearchStr={setSearchStr}
+                goHome={goHome}
+                usersForSearch={usersForSearch}
             />
-            <Button
-                onClick={() => setOpenCreateUser(true)}
-                sx={{marginLeft: 2}}
-                variant={'outlined'}
-            >
-                Create new user
-            </Button>
             {!loading && users.length === 0 ? <Typography>Users not found</Typography> :
                 <div>
                     <TableComponent
@@ -137,7 +120,7 @@ const UsersPage: FC = () => {
                 handleClose={handleCloseCreateDialog}
                 action={createUserAction}
             />
-        </>
+        </Box>
     )
 }
 export default UsersPage
